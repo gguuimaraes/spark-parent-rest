@@ -1,0 +1,261 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>br.eti.urbano</groupId>
+    <artifactId>spark-parent</artifactId>
+    <packaging>pom</packaging>
+    <version>1.0.0</version>
+
+    <name>Spark REST - Parent Project</name>
+    <url>http://sparkjava.com/</url>
+    <description>
+        Spark - A micro framework for creating web applications in Kotlin and Java 8 with minimal effort
+    </description>
+
+    <organization>
+        <name>SENAI-FATESG</name>
+    </organization>
+
+    <distributionManagement>
+        <site>
+            <id>site</id>
+            <url>${project.baseUri}</url>
+        </site>
+    </distributionManagement>
+
+    <developers>
+        <developer>
+            <id>brunourb</id>
+            <name>Bruno Urbano</name>
+            <email>bruno@urbano.eti.br</email>
+            <url>http://urbano.eti.br</url>
+            <organization>SENAI-FATESG</organization>
+            <organizationUrl>http://www.senaigo.com.br</organizationUrl>
+            <roles>
+                <role>architect</role>
+                <role>developer</role>
+            </roles>
+            <timezone>America/Sao_Paulo</timezone>
+            <properties>
+                <picUrl>https://goo.gl/qaw4YO</picUrl>
+            </properties>
+        </developer>
+    </developers>
+
+    <properties>
+        <enconding>UTF-8</enconding>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+
+        <java.version>1.8</java.version>
+        <maven.compiler.source>${java.version}</maven.compiler.source>
+        <maven.compiler.target>${java.version}</maven.compiler.target>
+        <lombok.version>1.16.12</lombok.version>
+        <junit.version>4.12</junit.version>
+        <umlgraph.version>5.6.6</umlgraph.version>
+        <maven.site.version>3.5.1</maven.site.version>
+        <maven.plugin.version>3.5.1</maven.plugin.version>
+        <checkstyle.plugin.version>2.17</checkstyle.plugin.version>
+        <checkstyle.version>5.3</checkstyle.version>
+        <maven.findbugs.plugin.version>3.0.4</maven.findbugs.plugin.version>
+        <maven.pmd.plugin.version>3.7</maven.pmd.plugin.version>
+        <checkstyle.header.file>${basedir}/config/java.header</checkstyle.header.file>
+        <checkstyle.suppressions.file>${basedir}/config/suppressions.xml</checkstyle.suppressions.file>
+        <maven.surefire.plugin.version>2.19.1</maven.surefire.plugin.version>
+
+    </properties>
+
+    <profiles>
+        <profile>
+            <id>full-build</id>
+            <activation>
+                <activeByDefault>false</activeByDefault>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-pmd-plugin</artifactId>
+                        <version>${maven.pmd.plugin.version}</version>
+                        <configuration>
+                            <targetJdk>${java.version}</targetJdk>
+                            <outputEncoding>${project.build.sourceEncoding}</outputEncoding>
+                            <sourceEncoding>${project.build.sourceEncoding}</sourceEncoding>
+                            <minimumTokens>20</minimumTokens>
+                            <skipEmptyReport>false</skipEmptyReport>
+                            <failOnViolation>false</failOnViolation>
+                            <printFailingErrors>true</printFailingErrors>
+                            <includeTests>true</includeTests>
+                            <rulesets>
+                                <ruleset>${project.parent.basedir}/config/pmd-rulesets.xml</ruleset>
+                            </rulesets>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>pmd</goal>
+                                    <goal>cpd</goal>
+                                    <goal>cpd-check</goal>
+                                    <goal>check</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>findbugs-maven-plugin</artifactId>
+                        <version>${maven.findbugs.plugin.version}</version>
+                        <configuration>
+                            <failOnError>true</failOnError>
+                            <effort>Max</effort>
+                            <threshold>Low</threshold>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>findbugs</goal>
+                                    <!--<goal>check</goal>-->
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-site-plugin</artifactId>
+                        <version>${maven.site.version}</version>
+                        <executions>
+                            <execution>
+                                <phase>prepare-package</phase>
+                                <goals>
+                                    <goal>site</goal>
+                                    <goal>stage</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+
+            <reporting>
+                <excludeDefaults>true</excludeDefaults>
+                <outputDirectory>${project.build.directory}/site</outputDirectory>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-site-plugin</artifactId>
+                        <version>${maven.site.version}</version>
+                        <configuration>
+                            <relativizeDecorationLinks>true</relativizeDecorationLinks>
+                            <generateSitemap>true</generateSitemap>
+                            <locales>en,fr</locales>
+                            <outputEncoding>${project.build.sourceEncoding}</outputEncoding>
+                        </configuration>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-project-info-reports-plugin</artifactId>
+                        <version>2.7</version>
+                        <configuration>
+                            <dependencyDetailsEnabled>false</dependencyDetailsEnabled>
+                            <dependencyLocationsEnabled>false</dependencyLocationsEnabled>
+                        </configuration>
+                        <reportSets>
+                            <reportSet>
+                                <reports>
+                                    <report>cim</report>
+                                    <report>dependencies</report>
+                                    <report>dependency-convergence</report>
+                                    <report>dependency-info</report>
+                                    <report>index</report>
+                                    <report>issue-tracking</report>
+                                    <report>project-team</report>
+                                    <report>scm</report>
+                                    <report>summary</report>
+                                </reports>
+                            </reportSet>
+                        </reportSets>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-javadoc-plugin</artifactId>
+                        <version>2.9</version>
+                        <configuration>
+                            <encoding>${project.build.sourceEncoding}</encoding>
+                            <detectJavaApiLink>true</detectJavaApiLink>
+                            <detectOfflineLinks>true</detectOfflineLinks>
+                            <doclet>org.umlgraph.doclet.UmlGraphDoc</doclet>
+                            <docletArtifact>
+                                <groupId>org.umlgraph</groupId>
+                                <artifactId>umlgraph</artifactId>
+                                <version>${umlgraph.version}</version>
+                            </docletArtifact>
+                            <additionalparam>-views -all</additionalparam>
+                            <useStandardDocletOptions>true</useStandardDocletOptions>
+                        </configuration>
+                    </plugin>
+                    <plugin>
+                        <!--To support checkstyle goals. For example: "mvn checkstyle:checkstyle"-->
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-checkstyle-plugin</artifactId>
+                        <version>${checkstyle.plugin.version}</version>
+                        <configuration>
+                            <!-- <configLocation>/home/greenhorn/NetBeansProjects/greenhorn-checkstyle.xml</configLocation>-->
+                            <!-- The above conguration line works as well, but the below is prefered. -->
+                            <encoding>${project.build.sourceEncoding}</encoding>
+                            <headerFile>config/java.header</headerFile>
+                            <configLocation>config/checkstyle.xml</configLocation>
+                            <suppressionsLocation>config/suppressions.xml</suppressionsLocation>
+                        </configuration>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-pmd-plugin</artifactId>
+                        <version>${maven.pmd.plugin.version}</version>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-jxr-plugin</artifactId>
+                        <version>2.5</version>
+                        <reportSets>
+                            <reportSet>
+                                <id>aggregate</id>
+                                <reports>
+                                    <report>aggregate</report>
+                                    <report>test-aggregate</report>
+                                </reports>
+                            </reportSet>
+                        </reportSets>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>findbugs-maven-plugin</artifactId>
+                        <version>${maven.findbugs.plugin.version}</version>
+                        <configuration>
+                            <!--
+                                Enables analysis which takes more memory but finds more bugs.
+                                If you run out of memory, changes the value of the effort element
+                                to 'low'.
+                            -->
+                            <effort>Max</effort>
+                            <!-- Reports all bugs (other values are medium and max) -->
+                            <threshold>Low</threshold>
+                            <!-- Produces XML report -->
+                            <xmlOutput>true</xmlOutput>
+                        </configuration>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-pmd-plugin</artifactId>
+                        <version>${maven.pmd.plugin.version}</version>
+                    </plugin>
+                </plugins>
+            </reporting>
+        </profile>
+    </profiles>
+
+</project>

@@ -46,6 +46,19 @@
                 <picUrl>https://goo.gl/qaw4YO</picUrl>
             </properties>
         </developer>
+
+        <developer>
+            <id>gguuimaraes</id>
+            <name>Gabriel Guimarães</name>
+            <email>gguuimaraes@hotmail.com</email>
+            <roles>
+                <role>developer</role>
+            </roles>
+            <timezone>America/Sao_Paulo</timezone>
+            <properties>
+                <picUrl>https://goo.gl/qaw4YO</picUrl>
+            </properties>
+        </developer>
     </developers>
 
     <properties>

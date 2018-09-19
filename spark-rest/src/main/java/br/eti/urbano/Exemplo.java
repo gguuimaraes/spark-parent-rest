@@ -2,8 +2,7 @@ package br.eti.urbano;
 
 import org.apache.log4j.Logger;
 
-import static spark.Spark.get;
-import static spark.Spark.post;
+import static spark.Spark.*;
 
 public class Exemplo {
 
@@ -19,19 +18,29 @@ public class Exemplo {
 
         post("/", (request, response) -> {
             LOGGER.info("Acesso ao método POST");
-            return request.body();
+            response.status(201);
+            return "Objeto criado";
         });
 
-//        put("/", (request, response) -> {
-//
-//        });
-//
-//        delete("/", (request, response) -> {
-//            LOGGER.info(request.body());
-//        });
-//
-//        options("/", (request, response) -> {
-//            LOGGER.info(request.body());
-//        });
+        put("/", (request, response) -> {
+
+            response.status(200);
+            return "Objeto atualizado";
+        });
+
+        delete("/", (request, response) -> {
+            LOGGER.info(request.body());
+
+            response.status(200);
+            return "Objeto deletado";
+        });
+
+        options("/", (request, response) -> {
+            LOGGER.info(request.body());
+
+            response.status(200);
+
+            return "Rota Options";
+        });
     }
 }

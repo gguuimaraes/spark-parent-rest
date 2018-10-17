@@ -6,63 +6,81 @@ import org.apache.log4j.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 import static spark.Spark.*;
 
 public class UserApi {
 
     final static Logger LOGGER = Logger.getLogger(UserApi.class);
+    final static List<User> users = new ArrayList<>();
 
     public static void main(String[] args) {
+
         path("/api", () -> {
             path("/user", () -> {
                 get("", (request, response) -> {
+                    LOGGER.info("Acesso ao método GET");
+
                     response.type("application/json");
                     response.status(200);
-
-                    User user = new User();
-                    user.setUuid(UUID.randomUUID().toString());
-                    user.setUserName("Nome do usuario");
-                    User user2 = new User();
-                    user2.setUuid(UUID.randomUUID().toString());
-                    user2.setUserName("Nome do usuario 2");
-                    List<User> users = new ArrayList<>();
-                    users.add(user);
-                    users.add(user2);
-
-                    LOGGER.info("Acesso ao método GET");
                     return new Gson().toJson(users);
                 });
                 get("/:id", (request, response) -> {
-                    response.type("application/json");
-                    response.status(200);
+                    LOGGER.info("Acesso ao método GET");
 
+                    response.type("application/json");
                     String id = request.params(":id");
-                    LOGGER.info("Acesso ao método GET - Parametro id=" + id);
-                    return "Usuario id=" + id;
+                    for (User user : users) {
+                        if (user.getId().toString().equals(id)) {
+                            response.status(200);
+                            return new Gson().toJson(user);
+                        }
+                    }
+                    response.status(204);
+                    return "";
                 });
                 post("", (request, response) -> {
+                    LOGGER.info("Acesso ao método POST");
+
                     response.type("application/json");
                     response.status(201);
 
-                    LOGGER.info("Acesso ao método POST");
-                    return "Usuario cadastrado";
+                    User user = new Gson().fromJson(request.body(), User.class);
+                    users.add(user);
+
+                    return new Gson().toJson(user);
                 });
                 put("", (request, response) -> {
-                    response.type("application/json");
-                    response.status(201);
-
                     LOGGER.info("Acesso ao método PUT");
-                    return "Usuario alterado";
+
+                    response.type("application/json");
+
+                    User user = new Gson().fromJson(request.body(), User.class);
+                    if (users.removeIf(u -> u.getId() == user.getId())) {
+                        users.add(user);
+                        response.status(201);
+                        return new Gson().toJson(user);
+                    } else {
+                        response.status(204);
+                        return "";
+                    }
                 });
                 delete("/:id", (request, response) -> {
+                    LOGGER.info("Acesso ao método DELETE");
+
                     response.type("application/json");
-                    response.status(204);
 
                     String id = request.params(":id");
-                    LOGGER.info("Acesso ao método DELETE - Parametro id=" + id);
-                    return "Usuario id=" +id +" deletado";
+
+                    for (User u : users) {
+                        if (u.getId().toString().equals(id)) {
+                            response.status(201);
+                            users.remove(u);
+                            return new Gson().toJson(u);
+                        }
+                    }
+                    response.status(204);
+                    return "";
                 });
             });
 
